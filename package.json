@@ -1,0 +1,33 @@
+{
+  "name": "echoes-decision-simulator",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "test": "node --experimental-strip-types --test tests/*.test.mjs",
+    "validate": "node --experimental-strip-types scripts/validate.ts",
+    "check:colors": "node scripts/check-colors.mjs",
+    "audit:colors": "node scripts/audit-colors.mjs",
+    "docs:colors": "node --experimental-strip-types scripts/generate-colors.ts && node --experimental-strip-types scripts/generate-style-guide.ts",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.122.0",
+    "@react-three/fiber": "^8.18.0",
+    "framer-motion": "^11.11.17",
+    "gsap": "^3.15.0",
+    "lucide-react": "^0.468.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "three": "^0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "typescript": "~5.6.2",
+    "vite": "^5.4.11"
+  }
+}

@@ -4,7 +4,12 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
-No project implementation has been recorded yet. Replace this sentence with entries as you build:
+## 2026-10-11T08:15:16+05:30 — Apply shared game color system
+
+- Changed: Centralized the ECHOES palette in `src/tokens/colors.ts`, generated the CSS variables and style guide, applied surface-aware semantic colors across the interface and procedural scenes, and added palette/contrast/environment regression tests.
+- Why: Keep the Midnight & Amber visual system consistent across the UI, HUD, Scenario Studio, and six scenario environments while preserving each scenario's identity.
+- Validation: `npm run build` passed; `npm test` passed (63 tests); `npm run validate` passed for all six built-ins plus Studio fixtures; `npm run check:colors` and `npm run audit:colors` passed. The app loaded in the local in-app browser at `http://127.0.0.1:5190/` and exposed the campaign picker controls.
+- Limitations: The build reports the existing large Three.js chunk warning. Browser verification here confirmed page load and accessible picker content; a complete visual review at every viewport was not performed.
 
 ```text
 ## <actual timestamp> — <short change title>

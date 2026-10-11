@@ -1,56 +1,54 @@
-# DevDay Exchange Community Hackathon: Kochi
+# ECHOES
 
-A repository template for participants at the 10–11 October 2026 hackathon. It contains event rules and documentation scaffolding; build your project from scratch at the event.
+ECHOES is a local decision-simulation game for exploring how operational choices shape uncertain outcomes. Players manage six deterministic scenarios, inspect consequences, rewind decisions, compare recorded paths, and create or edit scenarios in the Scenario Studio.
 
-**[Event and registration on Luma](https://luma.com/z10nz8gp)** · **[Event rules](RULES.md)** · **[Agent instructions](AGENTS.md)**
+## Run locally
 
-## Event details
+Prerequisites: Node.js 22.6 or later and npm. No credentials, environment variables, network APIs, or database are required at runtime.
 
-| Detail | Information |
-| --- | --- |
-| Venue | JAIN University, Kochi |
-| Location | [Open the venue map](https://maps.app.goo.gl/Eme7gR7NDXSNRANu5) |
-| Rooms | 2008 and 2009 |
-| Check-in | 10 October 2026, 6:00 PM IST |
-| Kick-off | 10 October 2026, 6:30 PM IST |
-| Wrap-up | 11 October 2026, by 10:00 AM IST |
-| Participation | Solo or a team of up to 4 participants |
-| Theme | Open — build anything you like |
+```sh
+npm ci
+npm run dev
+```
 
-Keep your approved Luma QR code ready for entry, and bring your laptop and charger. Eligible checked-in participants will receive Codex credits and OpenAI API credits.
+Vite prints the local URL when the server starts. Production and validation checks:
 
-## Use this template
+```sh
+npm run build
+npm test
+npm run validate
+npm run check:colors
+npm run audit:colors
+```
 
-1. Select **Use this template → Create a new repository** on GitHub. Create your own project repository and clone it.
-2. Read [RULES.md](RULES.md) and [AGENTS.md](AGENTS.md) before building. Begin project implementation at the event.
-3. Fill in the project overview below as you build. Use any suitable language or framework, keeping the implementation simple.
-4. Record meaningful changes in [CHANGELOG.md](CHANGELOG.md) and your Codex usage in [AI_USAGE.md](AI_USAGE.md). Commit after completed milestones; aim for a meaningful checkpoint about every 30 minutes.
-5. Complete [SUBMISSION.md](SUBMISSION.md) with your code repository, short project description, and working demo. Follow submission instructions announced by the organizers.
+Use `?lite=1` for the lower-cost 3D renderer or `?static=1` for the accessible static illustration mode. Both retain the simulation interactions.
 
-This template has no application code or required technology stack. The documentation and commit cadence are repository workflow guidance; the event participation rules are in [RULES.md](RULES.md).
+## What is included
 
-## Project overview — complete during the event
+- Six deterministic scenarios, with branching, recorded consequences, rewind, replay and comparison.
+- A persistent procedural Three.js Planning Room with an SVG/HTML fallback.
+- Local campaign progression, scores, stars, ranks, achievements and run history.
+- Scenario Studio for validated custom scenarios and built-in-derived variants.
+- A centralized Midnight & Amber color system with semantic light/dark surfaces and scenario accents. See [the color style guide](docs/style-guide.md).
 
-- **Project name:** TODO
-- **Short description:** TODO — what it does, who it helps, and why it matters.
-- **Team:** TODO — participant names and GitHub handles; maximum 4 members.
-- **Working demo:** TODO — link or local demo instructions.
-- **Technology stack:** TODO
+The simulation engine remains authoritative. Presentation effects do not change game outcomes.
 
-### Run the project
+## Project checks
 
-Replace these placeholders with commands that actually work for your project:
+- `npm run build` runs the TypeScript project build and Vite production build.
+- `npm test` runs the deterministic engine, game, Studio, rendering-mode and palette tests.
+- `npm run validate` enumerates scenario paths and validates outcomes, scoring and Studio balance.
+- `npm run check:colors` rejects color literals outside the token source.
+- `npm run audit:colors` checks source and built CSS against the palette.
+- `npm run docs:colors` regenerates `src/tokens/colors.css` and `docs/style-guide.md` from `src/tokens/colors.ts`.
 
-1. Prerequisites and versions: TODO
-2. Dependency installation: TODO
-3. Environment setup: TODO — list required variable names and provide a sanitized `.env.example` if needed.
-4. Start the project: TODO
-5. Run checks or tests: TODO
+## Further documentation
 
-### Current status
+- [Scenario Studio authoring and validation](docs/scenario-studio.md)
+- [Game design and progression](docs/game-design.md)
+- [Motion specification](docs/motion-spec.md)
+- [Color style guide](docs/style-guide.md)
 
-- Working features: TODO
-- Known limitations: TODO
-- Libraries, APIs, and public datasets used: TODO — include source links and applicable attribution.
+## Hackathon reference
 
-See [AI_USAGE.md](AI_USAGE.md) for AI assistance and [CHANGELOG.md](CHANGELOG.md) for the development record.
+This repository retains the organizer-provided [event rules](RULES.md), [agent guidance](AGENTS.md), [change log](CHANGELOG.md), [AI usage record](AI_USAGE.md), and [submission checklist](SUBMISSION.md). Confirm participant details and organizer submission requirements separately.

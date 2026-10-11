@@ -1,0 +1,27 @@
+/* Color values live only in colors.ts/colors.css; this file defines non-colour tokens and compatibility names. */
+@import './colors.css';
+:root {
+  --paper: var(--surface-page); --sand: var(--paper-200); --ink: var(--text-primary); --walnut: var(--walnut-800); --espresso: var(--espresso-900); --cream: var(--cream-100); --tan: var(--scenario-accent-fill); --rule: var(--divider); --secondary: var(--text-secondary);
+  --midnight: var(--walnut-800); --deep-background: var(--espresso-900); --slate-surface: var(--surface-raised); --elevated-slate: var(--surface-hover);
+  --amber: var(--focus); --ivory: var(--text-primary); --secondary-text: var(--text-secondary); --muted-border: var(--divider); --coral: var(--negative); --focus-ring: var(--focus);
+  --status-positive: var(--positive); --status-setback: var(--negative); --status-warning: var(--warning); --status-disabled: var(--text-tertiary); --status-reward: var(--reward-dark); --focus-visible: var(--focus);
+  --action-primary: var(--text-primary); --action-primary-text: var(--surface-page); --action-hover: var(--surface-hover); --action-selected: var(--text-primary);
+  --surface-room: var(--espresso-900); --surface-elevated: var(--surface-hover); --surface-card: var(--surface-raised); --border-muted: var(--divider);
+  --font-display: "Young Serif", Georgia, "Times New Roman", serif;
+  --font-ui: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-data: "IBM Plex Mono", "SFMono-Regular", Consolas, monospace;
+  --font-head: var(--font-display); --font-body: var(--font-ui); --font-mono: var(--font-data);
+  --text-xs: 12px; --text-sm: 13px; --text-base: 15px; --text-lg: 17px; --heading-sm: 20px; --heading-md: 26px; --heading-lg: clamp(30px,3vw,40px); --heading-display: clamp(42px,5vw,56px);
+  --line-height-tight: 1.1; --line-height-normal: 1.45; --line-height-relaxed: 1.6;
+  --font-weight-regular: 400; --font-weight-medium: 500; --font-weight-semibold: 600; --font-weight-bold: 700;
+  --letter-spacing-label: .07em; --letter-spacing-display: -.035em;
+  --page-margin: clamp(24px,6vw,96px); --content-width: 1440px; --reading-measure: 68ch;
+  --motion-fast: 120ms; --motion-option-fill: 250ms; --motion-screen: 350ms; --motion-wipe: 400ms;
+  --motion-ease-enter: cubic-bezier(.22,1,.36,1); --motion-ease-travel: cubic-bezier(.65,0,.35,1); --motion-ease-exit: cubic-bezier(.4,0,1,1);
+  --text-12: var(--text-xs); --text-14: 14px; --text-16: 16px; --text-20: var(--heading-sm); --text-32: 32px;
+  --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-6: 24px; --space-8: 32px; --space-12: 48px;
+  --radius-control: 4px; --radius-panel: 8px; --border-hairline: 1px solid var(--rule); --shadow-contact: 0 1px 2px var(--shadow-warm);
+  --z-world: 0; --z-content: 2; --z-topbar: 8; --z-menu: 12; --z-overlay: 20;
+  --material-paper-roughness: .98; --material-wood-roughness: .9; --material-ceramic-roughness: .72;
+  font-synthesis: none; text-rendering: optimizeLegibility; font-variant-numeric: tabular-nums;
+}

@@ -1,0 +1,2 @@
+# Documented source colour exceptions. Format: relative/path:line — reason.
+# Keep empty unless a third-party or generated file cannot use ECHOES tokens.
