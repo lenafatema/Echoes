@@ -30,6 +30,7 @@ type Props = {
   onStudioDelete?: (id: string) => void;
   plannerXp?: number;
   plannerLevel?: number;
+  renderMode?: 'world' | 'lite' | 'static';
   view?: PickerView;
   onViewChange?: (view: PickerView) => void;
 };
@@ -47,12 +48,16 @@ export function ScenarioPicker({
   onFreePlayChange, onDailyChallenge, history = [], achievements = [], onReplayRecord,
   onLocked, studioItems = [], onStudioCreate, onStudioOpen, onStudioEdit,
   onStudioEditItem, onStudioPlay, onStudioDelete, plannerXp = 0, plannerLevel = 1,
-  view = 'choices', onViewChange,
+  view = 'choices', onViewChange, renderMode = 'world',
 }: Props) {
   const campaignProgress = <p className="campaign-progress">Campaign stars <strong>{campaignStars(bestStars)} / 18</strong><span className="planner-progress">Planner level {plannerLevel} · {plannerXp} XP</span></p>;
 
   if (view === 'choices') {
     return <section className="library-picker picker-home" aria-labelledby="picker-title">
+      <div className="picker-home-world" aria-hidden="true">
+        {renderMode === 'static' && <div className="picker-home-static-scene"><ScenarioIllustration scenario={scenarios[0]} state={scenarios[0].startingState} active /></div>}
+        <span className="picker-home-world-caption">Planning Room</span>
+      </div>
       <header className="library-picker-head picker-home-head">
         <div className="picker-intro">
           <p className="eyebrow">ECHOES · Planning room</p>

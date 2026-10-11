@@ -8,6 +8,7 @@ export interface CameraPreset {
 
 export function cameraPresetFor(screen: WorldScreen, scenarioIndex: number, selectedScenario: boolean, focusKey?: string, historyStep = 0): CameraPreset {
   if (screen === 'picker') {
+    if (focusKey === 'picker-home') return { position: [0, 7.1, 12.4], target: [0, 0.2, -0.45] };
     if (focusKey?.startsWith('landmark:')) {
       const landmark = roomLandmarks.find(item => item.id === focusKey.slice('landmark:'.length));
       if (landmark) return { position: [...landmark.camera], target: [...landmark.target] };

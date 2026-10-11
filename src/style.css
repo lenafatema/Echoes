@@ -541,6 +541,28 @@ body, button, input, select, textarea { font-family: var(--font-ui); }
  .picker-existing .campaign-records{padding:0 18px}
 }
 
+/* Give the persistent Planning Room Canvas a dedicated hero band above the two entry choices. */
+.library-shell.world-enabled[data-picker-view="choices"]{background:var(--surface-room)}
+.world-canvas.world-picker-home-hero{inset:58px 0 auto;height:clamp(170px,31vh,290px);z-index:1;overflow:hidden;pointer-events:none;opacity:1}
+.world-canvas.world-picker-home-hero canvas{width:100%!important;height:100%!important}
+.picker-home{justify-content:flex-start!important;gap:clamp(14px,2.6vh,24px)!important;padding:8px clamp(22px,7vw,100px) max(18px,env(safe-area-inset-bottom))!important}
+.picker-home-world{position:relative;flex:0 0 clamp(170px,31vh,290px);width:100%;overflow:hidden;border-bottom:1px solid var(--border-muted);pointer-events:none}
+.picker-home-world-caption{position:absolute;left:2px;bottom:10px;color:var(--text-secondary);font:9px var(--font-data);letter-spacing:.12em;text-transform:uppercase}
+.picker-home-static-scene{position:absolute;inset:0;display:grid;place-items:center;perspective:700px}
+.picker-home-static-scene .scene-art{width:min(650px,82vw);height:90%;transform:rotateX(7deg) translateY(4px);transform-origin:center bottom;animation:picker-scene-float 7s ease-in-out infinite;filter:drop-shadow(0 18px 20px rgba(4,8,15,.24))}
+@keyframes picker-scene-float{0%,100%{transform:rotateX(7deg) translateY(4px)}50%{transform:rotateX(7deg) translateY(-3px)}}
+@media(max-width:760px){
+ .world-canvas.world-picker-home-hero{top:62px;height:clamp(205px,31vh,270px)}
+ .picker-home{gap:15px!important;padding:0 20px max(16px,env(safe-area-inset-bottom))!important}
+ .picker-home-world{flex-basis:clamp(205px,31vh,270px)}
+ .picker-home h1{font-size:clamp(32px,8vw,42px);margin:3px 0 7px}
+ .picker-home .picker-intro>p:not(.eyebrow){font-size:13px}
+ .picker-entry-choices{gap:10px}
+ .picker-entry-choices>button{min-height:116px;padding:14px;gap:12px}
+}
+@media(prefers-reduced-motion:reduce){.picker-home-static-scene .scene-art{animation:none;transform:none}}
+.library-shell.motion-reduced .picker-home-static-scene .scene-art{animation:none;transform:none}
+
 .intro-copy-block[data-surface="light"],.decision-copy[data-surface="light"]{background:var(--surface-page);color:var(--text-primary);padding:clamp(14px,2vw,26px);}
 .intro-copy-block[data-surface="light"]{max-width:740px;}
 @media(max-width:760px){.decision-copy[data-surface="light"]{padding:17px 20px 10px;}}

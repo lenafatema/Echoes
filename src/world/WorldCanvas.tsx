@@ -15,7 +15,7 @@ import { roomLightingFor } from '../environment/room-lighting';
 
 export type WorldScreen = 'picker'|'intro'|'decision'|'consequence'|'result'|'compare'|'why'|'tree';
 export type WorldMode = 'world'|'lite'|'static';
-export interface WorldProps { scenarios:Scenario[]; scenario:Scenario|null; run:Run|null; scenarioTheme?:string; roomStats?:import('../environment/types').RoomStats; rewardFeedback?:RewardFeedback[]; cameraMovement?:number; presentationEventKey?:string|null; comparisonRuns?:{a:Run;b:Run}|null; treeRuns?:TreeRun[]; treeFocusId?:string; onTreeNodeSelect?:(nodeId:string)=>void; onCreateSituation?:()=>void; onNavigateRoom?:(id:LandmarkId)=>void; previewRoles?:import('../scenarios/schema').MeasureRole[]; toolCharges?:ToolCharges; focusedTool?:keyof ToolCharges|null; screen:WorldScreen; focusKey?:string; mode:WorldMode; onSelect:(s:Scenario)=>void; pickerSelectionEnabled?:boolean; onFailure:(reason?:string)=>void; reducedMotion:boolean; hidden:boolean; onLowPerformance:()=>void; onCameraMoving:(moving:boolean)=>void; cameraMoving:boolean; }
+export interface WorldProps { scenarios:Scenario[]; scenario:Scenario|null; run:Run|null; scenarioTheme?:string; roomStats?:import('../environment/types').RoomStats; rewardFeedback?:RewardFeedback[]; cameraMovement?:number; presentationEventKey?:string|null; comparisonRuns?:{a:Run;b:Run}|null; treeRuns?:TreeRun[]; treeFocusId?:string; onTreeNodeSelect?:(nodeId:string)=>void; onCreateSituation?:()=>void; onNavigateRoom?:(id:LandmarkId)=>void; previewRoles?:import('../scenarios/schema').MeasureRole[]; toolCharges?:ToolCharges; focusedTool?:keyof ToolCharges|null; screen:WorldScreen; focusKey?:string; mode:WorldMode; onSelect:(s:Scenario)=>void; pickerSelectionEnabled?:boolean; pickerHomeHero?:boolean; onFailure:(reason?:string)=>void; reducedMotion:boolean; hidden:boolean; onLowPerformance:()=>void; onCameraMoving:(moving:boolean)=>void; cameraMoving:boolean; }
 
 const locations:[[number,number,number],[number,number,number],[number,number,number],[number,number,number],[number,number,number],[number,number,number]]=[[-5.1,0,-1.4],[-3.5,0,2],[-1.7,0,4],[1.7,0,4],[3.5,0,2],[5.1,0,-1.4]];
 
@@ -23,7 +23,8 @@ function CameraDirector({scenarioIndex,screen,hasScenario,historyStep,focusKey,r
   const {camera,invalidate}=useThree(); const timeline=useRef<gsap.core.Timeline|null>(null); const last=useRef(''); const target=useRef(new THREE.Vector3(0,.25,0)); const destination=useRef<ReturnType<typeof cameraPresetFor>|null>(null); const lastLiteFrame=useRef(0);
   useEffect(()=>{
     const preset=cameraPresetFor(screen,scenarioIndex,hasScenario,focusKey,historyStep);
-    const destinationKey=`${screen}:${scenarioIndex}:${hasScenario}:${['why','tree'].includes(screen)||screen==='picker'&&focusKey?.startsWith('landmark:')?focusKey||'':''}:${['decision','consequence'].includes(screen)?historyStep:''}`; if(last.current===destinationKey)return; last.current=destinationKey;
+    const cameraFocus=screen==='picker'?(focusKey==='picker-home'?'picker-home':focusKey?.startsWith('landmark:')?focusKey:'overview'):['why','tree'].includes(screen)?focusKey||'':'';
+    const destinationKey=`${screen}:${scenarioIndex}:${hasScenario}:${cameraFocus}:${['decision','consequence'].includes(screen)?historyStep:''}`; if(last.current===destinationKey)return; last.current=destinationKey;
     destination.current=preset;
     timeline.current?.kill();
     const alreadyFramed=camera.position.distanceToSquared(new THREE.Vector3(...preset.position))<0.0001&&target.current.distanceToSquared(new THREE.Vector3(...preset.target))<0.0001;
@@ -93,7 +94,7 @@ export function WorldCanvas(props:WorldProps){
       throw error;
     }
   };
-  return <WorldErrorBoundary onFailure={props.onFailure}><div className={`world-canvas ${props.mode==='lite'?'world-lite':''}`} aria-hidden="true">
+  return <WorldErrorBoundary onFailure={props.onFailure}><div className={`world-canvas ${props.mode==='lite'?'world-lite':''} ${props.pickerHomeHero?'world-picker-home-hero':''}`} aria-hidden="true">
     <Canvas dpr={props.mode==='lite'?[motionTokens.performance.liteDpr,motionTokens.performance.liteDpr]:[1,Math.min(window.innerWidth<760?motionTokens.performance.mobileDpr:motionTokens.performance.desktopDpr,window.devicePixelRatio||1)]} frameloop={props.hidden?'never':props.mode==='lite'?'demand':props.cameraMoving?'always':'demand'} shadows={false} gl={createRenderer} fallback={<WebGLUnavailableFallback onFailure={props.onFailure}/>} >
       <Suspense fallback={null}><SceneContents {...props}/></Suspense>
     </Canvas>
