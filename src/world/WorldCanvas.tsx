@@ -15,7 +15,7 @@ import { roomLightingFor } from '../environment/room-lighting';
 
 export type WorldScreen = 'picker'|'intro'|'decision'|'consequence'|'result'|'compare'|'why'|'tree';
 export type WorldMode = 'world'|'lite'|'static';
-export interface WorldProps { scenarios:Scenario[]; scenario:Scenario|null; run:Run|null; scenarioTheme?:string; roomStats?:import('../environment/types').RoomStats; rewardFeedback?:RewardFeedback[]; cameraMovement?:number; presentationEventKey?:string|null; comparisonRuns?:{a:Run;b:Run}|null; treeRuns?:TreeRun[]; treeFocusId?:string; onTreeNodeSelect?:(nodeId:string)=>void; onCreateSituation?:()=>void; onNavigateRoom?:(id:LandmarkId)=>void; previewRoles?:import('../scenarios/schema').MeasureRole[]; toolCharges?:ToolCharges; focusedTool?:keyof ToolCharges|null; screen:WorldScreen; focusKey?:string; mode:WorldMode; onSelect:(s:Scenario)=>void; onFailure:(reason?:string)=>void; reducedMotion:boolean; hidden:boolean; onLowPerformance:()=>void; onCameraMoving:(moving:boolean)=>void; cameraMoving:boolean; }
+export interface WorldProps { scenarios:Scenario[]; scenario:Scenario|null; run:Run|null; scenarioTheme?:string; roomStats?:import('../environment/types').RoomStats; rewardFeedback?:RewardFeedback[]; cameraMovement?:number; presentationEventKey?:string|null; comparisonRuns?:{a:Run;b:Run}|null; treeRuns?:TreeRun[]; treeFocusId?:string; onTreeNodeSelect?:(nodeId:string)=>void; onCreateSituation?:()=>void; onNavigateRoom?:(id:LandmarkId)=>void; previewRoles?:import('../scenarios/schema').MeasureRole[]; toolCharges?:ToolCharges; focusedTool?:keyof ToolCharges|null; screen:WorldScreen; focusKey?:string; mode:WorldMode; onSelect:(s:Scenario)=>void; pickerSelectionEnabled?:boolean; onFailure:(reason?:string)=>void; reducedMotion:boolean; hidden:boolean; onLowPerformance:()=>void; onCameraMoving:(moving:boolean)=>void; cameraMoving:boolean; }
 
 const locations:[[number,number,number],[number,number,number],[number,number,number],[number,number,number],[number,number,number],[number,number,number]]=[[-5.1,0,-1.4],[-3.5,0,2],[-1.7,0,4],[1.7,0,4],[3.5,0,2],[5.1,0,-1.4]];
 
@@ -70,6 +70,12 @@ function WebGLContextGuard({onFailure}:{onFailure:(reason?:string)=>void}){
   return null;
 }
 
+function WebGLUnavailableFallback({onFailure}:{onFailure:(reason?:string)=>void}){
+  const report=useRef(onFailure);report.current=onFailure;
+  useEffect(()=>{report.current('This browser could not create a WebGL context. The illustrated version keeps every game action available.')},[]);
+  return <span aria-hidden="true"/>;
+}
+
 export function WorldCanvas(props:WorldProps){
   // The Canvas remains mounted while the screen and simulation state change.
   if(props.mode==='static')return null;
@@ -88,7 +94,7 @@ export function WorldCanvas(props:WorldProps){
     }
   };
   return <WorldErrorBoundary onFailure={props.onFailure}><div className={`world-canvas ${props.mode==='lite'?'world-lite':''}`} aria-hidden="true">
-    <Canvas dpr={props.mode==='lite'?[motionTokens.performance.liteDpr,motionTokens.performance.liteDpr]:[1,Math.min(window.innerWidth<760?motionTokens.performance.mobileDpr:motionTokens.performance.desktopDpr,window.devicePixelRatio||1)]} frameloop={props.hidden?'never':props.mode==='lite'?'demand':props.cameraMoving?'always':'demand'} shadows={false} gl={createRenderer} fallback="WebGL is unavailable. The illustrated game remains accessible." >
+    <Canvas dpr={props.mode==='lite'?[motionTokens.performance.liteDpr,motionTokens.performance.liteDpr]:[1,Math.min(window.innerWidth<760?motionTokens.performance.mobileDpr:motionTokens.performance.desktopDpr,window.devicePixelRatio||1)]} frameloop={props.hidden?'never':props.mode==='lite'?'demand':props.cameraMoving?'always':'demand'} shadows={false} gl={createRenderer} fallback={<WebGLUnavailableFallback onFailure={props.onFailure}/>} >
       <Suspense fallback={null}><SceneContents {...props}/></Suspense>
     </Canvas>
   </div></WorldErrorBoundary>;

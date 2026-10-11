@@ -8,6 +8,7 @@ import { resolveWorldRenderMode } from '../src/world/render-mode.ts';
 import { destinationForLandmark, pickerDetailsIndexForLandmark } from '../src/environment/navigation.ts';
 import { rewardFeedbackForCompletion, unpresentedRewardFeedback } from '../src/game/reward-feedback.ts';
 import { environmentAccent, resolveScenarioEnvironment } from '../src/world/scenario-environments.ts';
+import { tutorialVisibleOnScreen } from '../src/tutorial-visibility.ts';
 
 test('option previews describe directions without evaluating or mutating a run', () => {
   for (const scenario of scenarios) {
@@ -73,6 +74,14 @@ test('each Planning Room landmark maps to its existing accessible destination', 
   assert.equal(pickerDetailsIndexForLandmark('medal-shelf'), 2);
   assert.equal(pickerDetailsIndexForLandmark('ledger'), 3);
   assert.equal(pickerDetailsIndexForLandmark('campaign-board'), null);
+});
+
+test('guided tutorial prompt only appears on its actionable decision screen', () => {
+  assert.equal(tutorialVisibleOnScreen('picker'), false);
+  assert.equal(tutorialVisibleOnScreen('intro'), false);
+  assert.equal(tutorialVisibleOnScreen('consequence'), false);
+  assert.equal(tutorialVisibleOnScreen('decision'), true);
+  assert.equal(tutorialVisibleOnScreen('decision', true), false, 'the prompt is hidden while Studio is open');
 });
 
 test('each built-in and Studio theme resolves to one stable, distinct world environment', () => {
