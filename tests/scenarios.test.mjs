@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { scenarios } from '../src/scenarios/index.ts';
-import { applyDecision, newRun, optionsFor, restoreRun, thresholdApplies } from '../src/engine/engine.ts';
+import { alignRunStartingDay, applyDecision, newRun, optionsFor, restoreRun, thresholdApplies } from '../src/engine/engine.ts';
 
 test('each scenario completes valid deterministic paths with all outcomes',()=>{
   for(const scenario of scenarios){
@@ -14,7 +14,12 @@ test('each scenario completes valid deterministic paths with all outcomes',()=>{
 });
 
 test('tech fest sponsor withdrawal applies the ₹15,000 gap and supplier boundary is strict',()=>{
-  const s=scenarios.find(item=>item.id==='college-tech-fest');const run=newRun(s);assert.equal(run.state.budget,35000);const threshold=s.thresholds.find(item=>item.id==='supplier-risk');assert.equal(thresholdApplies(48001,threshold),false);assert.equal(thresholdApplies(48000,threshold),false);assert.equal(thresholdApplies(47999,threshold),true);
+  const s=scenarios.find(item=>item.id==='college-tech-fest');const run=newRun(s);assert.equal(run.day,2,'the first event is recorded on day two');assert.equal(run.history[0].day,2);assert.equal(run.state.budget,35000);const threshold=s.thresholds.find(item=>item.id==='supplier-risk');assert.equal(thresholdApplies(48001,threshold),false);assert.equal(thresholdApplies(48000,threshold),false);assert.equal(thresholdApplies(47999,threshold),true);
+});
+
+test('legacy tech-fest snapshots align once with the corrected opening day without changing simulation state',()=>{
+ const scenario=scenarios.find(item=>item.id==='college-tech-fest');const current=newRun(scenario);const legacy={...current,day:1,history:current.history.map(point=>({...point,day:1}))};const migrated=alignRunStartingDay(legacy,scenario.startingDay);
+ assert.equal(migrated.day,2);assert.equal(migrated.history[0].day,2);assert.deepEqual(migrated.state,legacy.state);assert.deepEqual(migrated.events,legacy.events);assert.deepEqual(alignRunStartingDay(migrated,scenario.startingDay),migrated);
 });
 
 test('rewinding restores real measures, decisions, events and fired-rule records',()=>{

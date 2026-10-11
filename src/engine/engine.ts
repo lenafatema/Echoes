@@ -11,7 +11,14 @@ function record(s:Scenario,run:Run,effect:Effect):RecordedChange { const m=s.mea
 function snapshot(run:Run){run.history.push({state:{...run.state},eventCount:run.events.length,decisionCount:run.decisions.length,day:run.day,status:run.status,outcome:run.outcome,firedCount:run.firedRules.length});}
 function event(s:Scenario,run:Run,eventId:string,step:number,changes:RecordedChange[]=[],optionId?:string){const data=s.events.find(e=>e.id===eventId);if(!data)throw new Error(`Missing event ${eventId}`);run.events.push({id:`${run.id}-${run.events.length+1}-${eventId}`,eventId,step,title:data.title,description:data.description,why:data.why,changes,optionId});}
 export function scoreOutcome(s:Scenario,state:Record<string,number>):Outcome {let total=0,weight=0;for(const m of s.measures){const w=s.scoreWeights[m.key]??0;const [lo,hi]=m.domain;total+=((state[m.key]-lo)/(hi-lo))*100*w;weight+=w;}const score=total/(weight||1);return score>=s.outcomes[0].minScore?'strong':score>=s.outcomes[1].minScore?'workable':'strained'}
-export function newRun(s:Scenario,id:PathId='A'):Run {const run:Run={scenarioId:s.id,id,state:{...s.startingState},day:1,status:'active',outcome:null,decisions:[],events:[],history:[],firedRules:[]};const changes=(s.openingEffects||[]).map(effect=>record(s,run,effect));event(s,run,s.openingEventId,0,changes);if(s.openingEffects?.length)run.firedRules.push('opening-effects');snapshot(run);return run;}
+export function newRun(s:Scenario,id:PathId='A'):Run {const run:Run={scenarioId:s.id,id,state:{...s.startingState},day:s.startingDay??1,status:'active',outcome:null,decisions:[],events:[],history:[],firedRules:[]};const changes=(s.openingEffects||[]).map(effect=>record(s,run,effect));event(s,run,s.openingEventId,0,changes);if(s.openingEffects?.length)run.firedRules.push('opening-effects');snapshot(run);return run;}
+/** Aligns saved snapshots with a scenario's declared start day after a calendar-label correction. */
+export function alignRunStartingDay(run:Run,startingDay:number):Run {
+ if(!Number.isInteger(startingDay)||startingDay<1||!run.history.length)return run;
+ const shift=startingDay-run.history[0].day;
+ if(shift<=0)return run;
+ return {...run,day:run.day+shift,history:run.history.map(point=>({...point,day:point.day+shift}))};
+}
 /** Replays a stored branch through the current scenario rules; useful for rejecting stale or incompatible saves. */
 export function matchesScenarioRun(s:Scenario,source:Run):boolean {
  try {

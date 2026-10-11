@@ -18,6 +18,7 @@ export function validateScenarioShape(value: unknown): ScenarioValidation {
   if (!textOnly(s.title,60) || !s.title.trim()) err('title','Title is required and must be 60 characters or fewer.');
   if (!textOnly(s.contextLine,200)) err('contextLine','Context must be 200 characters or fewer.');
   if (!['Easy','Medium','Hard'].includes(s.difficulty)) err('difficulty','Choose Easy, Medium or Hard.');
+  if (s.startingDay !== undefined && (!Number.isInteger(s.startingDay) || s.startingDay < 1 || s.startingDay > 365)) err('startingDay','Starting calendar day must be a whole number from 1 to 365.');
   if (!isObject(s.intro) || !textOnly(s.intro.summary,200) || !textOnly(s.intro.objective,200)) err('intro','Summary and objective must be plain text under 200 characters.');
   if (!Number.isInteger(s.steps) || s.steps !== 3) err('steps','The existing ECHOES engine requires exactly three decision stages.');
   if (!Array.isArray(s.measures) || s.measures.length !== 4) err('measures','Exactly four measures are required.');

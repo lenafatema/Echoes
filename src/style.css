@@ -468,3 +468,11 @@ body, button, input, select, textarea { font-family: var(--font-ui); }
 .intro-copy-block[data-surface="light"],.decision-copy[data-surface="light"]{background:var(--surface-page);color:var(--text-primary);padding:clamp(14px,2vw,26px);}
 .intro-copy-block[data-surface="light"]{max-width:740px;}
 @media(max-width:760px){.decision-copy[data-surface="light"]{padding:17px 20px 10px;}}
+
+/* Keep the primary run controls visible; put occasional destinations and settings behind one menu. */
+.library-topbar .room-menu-trigger{margin-left:auto;min-height:32px;padding:6px 11px!important;border:1px solid var(--rule)!important;text-decoration:none;font:10px var(--font-mono)!important;letter-spacing:.04em}
+.room-render-note{grid-column:1/-1;margin:5px 8px;color:var(--secondary);font:10px/1.4 var(--font-mono)}
+@media(max-width:760px){
+ .library-topbar .room-menu-trigger{grid-column:3/5;grid-row:1;justify-self:end;min-height:28px;padding:4px 9px!important;font-size:9px!important}
+ .room-destination-menu{max-height:calc(100dvh - 76px);overflow:auto;-webkit-overflow-scrolling:touch}
+}

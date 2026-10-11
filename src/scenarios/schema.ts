@@ -8,6 +8,8 @@ export interface TriggerRule { id: string; step: number; optionId: string; event
 export interface ThresholdRule { id: string; measure: string; eventId?: string; atMost?: number; below?: number; effects: Effect[]; why: string }
 export interface Scenario {
   id: string; title: string; difficulty: 'Easy' | 'Medium' | 'Hard'; contextLine: string; tone: string;
+  /** Calendar day on which the recorded scenario begins. The time measure remains independent. */
+  startingDay?: number;
   intro: { summary: string; objective: string }; openingEventId: string; openingEffects?: Effect[];
   measures: MeasureDefinition[]; startingState: Record<string, number>; steps: number;
   events: ScenarioEvent[]; options: ScenarioOption[]; triggers: TriggerRule[];

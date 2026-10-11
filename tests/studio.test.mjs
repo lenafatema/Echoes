@@ -4,7 +4,7 @@ import { scenarios } from '../src/scenarios/index.ts';
 import { applyDecision, matchesScenarioRun, newRun, optionsFor } from '../src/engine/engine.ts';
 import { checkBalance, medianScore } from '../src/studio/balance-checker.ts';
 import { createCustomSituation, createVariant, runSamplePath } from '../src/studio/defaults.ts';
-import { deleteSituation, duplicateSituation, playable, replaceSituation, restoreAtIndex } from '../src/studio/draft-store.ts';
+import { deleteSituation, duplicateSituation, playable, replaceSituation, restoreAtIndex, updateDraft } from '../src/studio/draft-store.ts';
 import { exportSituation, importSituation, sanitizeScenario } from '../src/studio/import-export.ts';
 import { validateScenarioShape, validateSituation } from '../src/studio/schema.ts';
 import { loadStudioStorage, saveStudioStorage, emptyStudioState, STUDIO_STORAGE_KEY } from '../src/studio/storage.ts';
@@ -59,6 +59,13 @@ test('Studio scenario-prefixed text paths update the intended nested field immut
   assert.equal(item.scenario.title, before.title, 'the original draft object is not mutated');
   assert.deepEqual(item.scenario, before);
   assert.throws(() => withScenarioField(item.scenario, 'scenario.missing.value', 'x'), /path does not exist/);
+});
+
+test('successive Studio edits apply to the latest draft and preserve other fields',()=>{
+ const item=createCustomSituation(fixedDate);const state={version:1,situations:[],draft:{situation:item,step:0}};
+ const first=updateDraft(state,draft=>{draft.scenario=withScenarioField(draft.scenario,'scenario.title','A careful plan');return draft;});
+ const second=updateDraft(first,draft=>{draft.scenario=withScenarioField(draft.scenario,'scenario.contextLine','Café, costs, and a changing schedule.');return draft;});
+ assert.equal(second.draft.situation.scenario.title,'A careful plan');assert.equal(second.draft.situation.scenario.contextLine,'Café, costs, and a changing schedule.');assert.equal(state.draft.situation.scenario.title,'Untitled situation');assert.equal(state.draft.situation.scenario.contextLine,'A short situation with limited resources and time.');
 });
 
 test('Studio schema accepts the default and enforces four roles, three stages, three options, bounds and text limits', () => {
